@@ -12,16 +12,24 @@ driver.get("https://flipboard.com/@flipboardbr/edi-o-do-dia-vonp8btnz")
 
 news_body_list = []
 news_title_list = []
-i = 0
 
-while i < 6:
-    i += 1
-    news_title = driver.find_element_by_xpath("//*[@id='content']/div/div/div/div[2]/main/ul/li[{}]/div/article/div/h3/a".format(i))
-    news_body = driver.find_elements(By.XPATH, "//*[@id='content']/div/div/div/div[2]/main/ul/li[{}]/div/article/div/p/a".format(i))
+
+for i in range(1, 5):
+    # Encontre os elementos de título e corpo da notícia
+    news_title = driver.find_element(By.XPATH, "//*[@id='content']/div/div/div/div[2]/main/ul/li[{}]/div/article/div/h3/a".format(i))
+    news_body = driver.find_element(By.XPATH, "//*[@id='content']/div/div/div/div[2]/main/ul/li[{}]/div/article/div/h3/a".format(i))
+    
+    # Adicione o texto dos elementos às listas
     news_title_list.append(news_title)
     news_body_list.append(news_body)    
+    
+    # Imprima o título e o corpo da notícia
     print(news_title)
     print(news_body)
+
+# Imprima as listas de títulos e corpos das notícias
+print(news_title_list)
+print(news_body_list)
 
 
 #news_list = driver.find_elements(By.XPATH, "//*[@id='content']/div/div/div/div[2]/main/ul")
