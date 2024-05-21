@@ -1,49 +1,74 @@
 import requests
+import requests
 import bs4
-import time
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.options import Options
-from selenium import webdriver
+
+def get_page_html(url):
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.text
+    else:
+        print(f"Falha ao acessar o site. Status code: {response.status_code}")
+        return None
+
+def consume_evolution_api(api_key, url, data):
+    headers = {
+        'apikey': api_key,
+        'Content-Type': 'application/json'
+    }
+
+    try:
+        response = requests.post(url, json=data, headers=headers)
+        response.raise_for_status()  
+        return response.json() 
+    except requests.exceptions.HTTPError as http_err:
+        print(f"HTTP error occurred: {http_err}")
+    except Exception as err:
+        print(f"Other error occurred: {err}")
+
+    return None
 
 
-#iniciando selenium, definindo navegador e inicializando objetos
-chrome_options = Options()
-chrome_options.add_argument("--headless")
-driver = webdriver.Chrome(options=chrome_options)
-driver.get("https://web.whatsapp.com")
+def main():
+    api_key = "X"
+    url = "X"
+    
+    url_news = 'https://ge.globo.com/'
+    page_html = get_page_html(url_news)
 
-#coletando as noticias e armazenando em um vetor 
-url = 'https://ge.globo.com/'
-request = requests.get(url)
-text = []
+   
+    if page_html:
+        pagehtml = bs4.BeautifulSoup(page_html, "html.parser")
 
-pagehtml = bs4.BeautifulSoup(request.text, "html.parser")
-list_news = pagehtml.find_all("a", class_="feed-post-link")
-
-
-for news in list_news:
-    print(news.text)
-    print(news.get("href"))
-    text.append(news)
-
-#espera a página do whatsapp carregar
-while len(driver.find_elements(By.ID, 'side')) < 1: 
-    time.sleep(1)
-
-#seta o número do whatsapp e a mensagem a ser enviada
-link = f"https://web.whatsapp.com/send?phone=13991639366&text={text}"
-driver.get(link)
-
-#mesmo processo de carregamento
-while len(driver.find_elements(By.ID, 'side')) < 1: 
-    time.sleep(1)
-
-
-if len(driver.find_elements(By.XPATH, '//*[@id="app"]/div/span[2]/div/span/div/div/div/div/div/div[1]')) < 1:
-    driver.find_element(By.XPATH, '//*[@id="main"]/footer/div[1]/div/span[2]/div/div[2]/div[2]/button/span').click()
         
-time.sleep(5)
+        list_news = pagehtml.find_all("a", class_="feed-post-link")
+        news_list = []
+
+        for news in list_news[:5]:  
+            title = news.text.strip()  
+            link = news.get("href")  
+            news_list.append({'title': title, 'link': link})
+
+        message_body = "As 5 principais notícias de hoje:\n\n"
+        for news in news_list:
+            message_body += f"Título: {news['title']}\nLink: {news['link']}\n\n"
+
+        print(message_body)
+    else:
+        print("Não foi possível obter o conteúdo da página.")
 
 
+    data = {
+        "number": "X",
+        "textMessage": {
+            "text": f"{message_body}"
+    }
+    }
 
+    response = consume_evolution_api(api_key, url, data)
+    if response:
+        print("Resposta da API:", response)
+    else:
+        print("Não foi possível obter uma resposta da API.")
+
+if __name__ == "__main__":
+    main()
