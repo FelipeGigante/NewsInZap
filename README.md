@@ -30,10 +30,8 @@ python main.py
 
 2. Script Details:
 
-- main.py: The main script that initiates the scraping process and handles API requests.
-- news_scraper.py: Contains functions for scraping news headlines from the target website.
-- api_consumer.py: Contains functions for making requests to the API.
+- main.py: The main script that initiates the scraping process and handles API requests / Contains functions for scraping news headlines from the target website / Contains functions for making requests to the API 
 
 ## Debugging
 
-- If you encounter any issues, ensure that your API key and endpoint URL are correctly configured in config.py. You can also check the error messages for more details on what might be going wrong.
+- If you encounter any issues, ensure that your API key and endpoint URL are correctly configured in main.py. You can also check the error messages for more details on what might be going wrong.
