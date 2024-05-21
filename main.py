@@ -1,6 +1,12 @@
 import requests
 import requests
 import bs4
+import dotenv
+import os
+
+#protegendo os dados da API
+dotenv.load_dotenv(dotenv.find_dotenv())
+
 
 def get_page_html(url):
     response = requests.get(url)
@@ -29,8 +35,8 @@ def consume_evolution_api(api_key, url, data):
 
 
 def main():
-    api_key = "X"
-    url = "X"
+    api_key = os.getenv("api_key")
+    url = os.getenv("url")
     
     url_news = 'https://ge.globo.com/'
     page_html = get_page_html(url_news)
@@ -48,6 +54,7 @@ def main():
             link = news.get("href")  
             news_list.append({'title': title, 'link': link})
 
+        number = os.getenv("number")
         message_body = "As 5 principais notícias de hoje:\n\n"
         for news in news_list:
             message_body += f"Título: {news['title']}\nLink: {news['link']}\n\n"
@@ -58,7 +65,7 @@ def main():
 
 
     data = {
-        "number": "X",
+        "number": f"{number}",
         "textMessage": {
             "text": f"{message_body}"
     }
