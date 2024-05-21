@@ -1,6 +1,6 @@
 # News Scraper and API Consumer
 
- ![Screen-Recording-_11-05-2021-20-47-33_](https://github.com/FelipeGigante/SimpleApp-Flutter/assets/61218356/92237d43-fd2a-407b-be4c-04d83bd03c4e)
+ !(https://github.com/FelipeGigante/SimpleApp-Flutter/assets/61218356/92237d43-fd2a-407b-be4c-04d83bd03c4e)
 
 ## Getting Started
 
