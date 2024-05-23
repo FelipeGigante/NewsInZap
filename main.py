@@ -33,7 +33,6 @@ def consume_evolution_api(api_key, url, data):
 
     return None
 
-
 def main():
     api_key = os.getenv("api_key")
     url = os.getenv("url")
@@ -49,33 +48,33 @@ def main():
         list_news = pagehtml.find_all("a", class_="feed-post-link")
         news_list = []
 
-        for news in list_news[:5]:  
+        for news in list_news[:6]:  
             title = news.text.strip()  
             link = news.get("href")  
             news_list.append({'title': title, 'link': link})
 
-        number = os.getenv("number")
-        message_body = "As 5 principais notícias de hoje:\n\n"
-        for news in news_list:
-            message_body += f"Título: {news['title']}\nLink: {news['link']}\n\n"
+        numbers = os.getenv("number").split(",")
+        for number in numbers:
+            message_body = "As 5 principais notícias de hoje:\n\n"
+            
+            for news in news_list:
+                message_body += f"Título: {news['title']}\nLink: {news['link']}\n\n"
 
-        print(message_body)
+            data = {
+                "number": number.strip(),
+                "textMessage": {
+                    "text": f"{message_body}"
+                }
+            }
+
+            response = consume_evolution_api(api_key, url, data)
+            if response:
+                print("Resposta da API:", response)
+            else:
+                print("Não foi possível obter uma resposta da API.")
+
     else:
         print("Não foi possível obter o conteúdo da página.")
-
-
-    data = {
-        "number": f"{number}",
-        "textMessage": {
-            "text": f"{message_body}"
-    }
-    }
-
-    response = consume_evolution_api(api_key, url, data)
-    if response:
-        print("Resposta da API:", response)
-    else:
-        print("Não foi possível obter uma resposta da API.")
 
 if __name__ == "__main__":
     main()
